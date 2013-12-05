@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Image resizer,cropper & uploader</title>
+	<link rel="stylesheet" href="css/style.css"/>
+	<script type="text/javascript">
+		var loader = new Image; 
+		loader.src="img/loader.gif"; 
+	</script>
+</head>
+<body>
+	<div id="wrapper">
+	</div>	
+	<div id="main">
+		<div id="badvert">
+			<h1> <b>[!]</b> Your browser does not support HTML5 basic functions</h1>
+			<span>Get a <b>REAL</b> browser <a href='https://www.google.com/intl/en/chrome/browser/'>here</a> </span>
+		</div>			
+		<div class="title">
+			<h1>Image resizer & cropper + send via ajax </h1>
+			<span>Made by Jesus Israel C. Rojas @dantaex</span>
+		</div>
+		<div class="box">
+			<input id='image_input' type="file" accept='*/img' />
+			<div id="fake_button" class="button"><span>	 Load pictures!		</span></div>
+		</div>
+		<div id="thumbs"><div id="message"></div></div>		
+		<input type="button" id="sendbutton" class="button" value="Send them!" />
+		<div id="reply"></div>
+		<script type="text/javascript">
+			document.getElementById("reply").style.display= "none";
+		</script>
+	</div>			
+</body>
+<script type="text/javascript" src="js/load_files.js" ></script>
+<script type="text/javascript" src="js/resize.js" ></script>
+<script type="text/javascript" src="js/send.js" ></script>
+<script type="text/javascript" src="js/file_utilities.js" ></script>
+<script type="text/javascript">
+	
+	var max_width = 156, max_height = 156, proportion = 4/3;
+
+	if ( !window.FileReader || !window.FormData ) document.getElementById("badvert").style.display = 'block';	
+	var inp = document.getElementById("image_input"),
+		thumbs  = document.getElementById("thumbs"), 
+		message = document.getElementById("message"),
+		sendbtn = document.getElementById("sendbutton"),
+		reply = document.getElementById("reply"),
+		frmdata = new FormData(),i,thefiles;
+	
+	thumbs.empty = function(){
+		for(var i=0; i < document.images.length; i++)
+			if(document.images[i].parentNode == this  )
+			{
+				return false;
+			}	
+		return true;	
+	}
+	
+	//sender button
+	sendbtn.addEventListener("click",function(){
+		sendbtn.value = "Sending...";
+		reply.style.display = "block";
+		send(frmdata,"upload.php",function(data){
+			sendbtn.style.display = "none";
+			reply.style.background = "white";
+			reply.innerHTML = "Check them out <a style='display:inline;' href ='"+(window.location+"").replace( /\/[^\/]+$/ , "")+"/uploads/'>here</a> ";
+		},'POST',
+		function(loaded,total){			
+			var current = parseInt( 520 - loaded / total *520 );
+			reply.style.backgroundPosition = "-" + current + "px 0px"; 
+		});
+	});
+	
+	document.getElementById("fake_button").addEventListener("click",function(){ inp.click(); });
+	inp.addEventListener("change",loadEm);
+	
+	//dragging
+	thumbs.addEventListener("dragover",dragOver,false);
+	thumbs.addEventListener("dragleave",dragOver,false);	
+	thumbs.addEventListener("drop",loadEm,false);
+	
+	function dragOver(e){
+		e.stopPropagation();
+		e.preventDefault();
+		e.target.className = (e.type  == "dragover")? "hover" : "" ;
+	}
+	
+	function loadEm(e){
+		var style = thumbs.empty() ? "url(img/loader.gif) center center no-repeat #333" : "#333" ;
+		thefiles = e.target.files || e.dataTransfer.files;
+		dragOver(e);
+		message.innerHTML =  "Loading images...." ;
+		allshown = thefiles.length;
+		thumbs.style.background = style;
+		loadFiles(thefiles,showAndResize,true);
+	}
+	
+	function showAndResize( images ){
+		if(typeof images == "undefined"){
+			message.innerHTML =  "No image detected at all";
+			setTimeout("thumbs.style.background = thumbs.empty() ? 'url(img/drop.png) 0px 0px no-repeat #333' : '#333'; message.innerHTML = '';  ",1500);
+		}
+		else{
+			var i;
+			for(i=0;i<images.length;i++)
+			{
+				message.innerHTML =  "Resizing... "+thefiles[i].name;
+				resizeAndCrop( images[i] , max_width, max_height, proportion, displayAndSave );
+			}
+		}
+	}
+	
+	var allshown;
+	function displayAndSave(image)
+	{
+		var newimage = new Image;
+		newimage.src = image;
+		thumbs.style.background = "#333";
+		message.innerHTML = "done!";
+		thumbs.appendChild(newimage);
+		/*
+		When imnage has been resized, the result is a data URI, not a "file input" file, 
+		so we cannot append it to a formdata, so we turn it to a blob:
+		*/
+		frmdata.append("images[]",dataURItoBlob(newimage.src) );	//images[index] 
+		( allshown > 1)? allshown-- : sendbtn.style.display = "block" ;
+	}
+</script>
+</html>

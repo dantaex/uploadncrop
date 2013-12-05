@@ -1,0 +1,132 @@
+html,body{
+	height:100%;
+	margin:0px;
+	font-family:calibri;
+}
+
+h1{
+	margin-bottom:0px;
+}
+
+/*
+	thanks to
+	http://blog.themeforest.net/tutorials/vertical-centering-with-css/
+*/
+
+#wrapper{
+	float:left; 
+	height:50%; 
+	margin-bottom:-200px;
+}
+
+#main{
+	clear:both;
+	height:auto;
+	width:520px;
+	position:relative;
+	margin:0 auto;
+}
+
+.button{
+	height:50px;
+	width:520px;			
+	text-align:center;
+	cursor:pointer;
+	font-size:25px;
+	margin:0 auto;
+}
+
+#fake_button{
+	color: #478707;
+	border:1px solid #7ABA3A;
+	top:0px;
+	overflow:hidden;
+	text-shadow: 0px 1px 1px #BEFE7E;
+	background-color:#8BCB4B;
+	position:absolute;
+}
+#fake_button:hover{background-color:#7ABA3A;}
+
+#sendbutton{
+	color: #3078C4;
+	border:1px solid #63ABE7;
+	text-shadow: 0px 1px 1px #A7EFFA;
+	background-color:#74BCF8;
+	margin-top:30px;
+	display:none;			
+}
+#sendbutton:hover{background-color:#63ABE7}
+
+.clear{clear:both;}
+
+#fake_button span{
+	margin-top:9px;
+	display:block;
+}
+
+
+input#image_input{
+	/*display:none;*/
+	position:absolute;
+}
+
+.box{
+	position:relative;
+	height:80px;
+}
+
+.title{ height:100px; }
+
+#thumbs{
+	width:500px;
+	min-height:151px;
+	background: url(../img/drop.png) 0px 0px no-repeat #333;
+	/*display:none;*/
+	padding:10px;			
+}
+
+#thumbs.hover{
+	background-position: 0px -171px;
+}
+
+#thumbs img{
+	margin:5px;
+}
+
+#message{
+	height: 20px;
+	display: block;
+	color: 
+	white;
+	text-align: center;
+}
+
+#badvert{
+	display:none;
+	margin-top:100px;
+}
+#badvert h1{color:#555;}
+#badvert h1 b{color:red;}
+
+#reply{
+	width:520px;
+	height: 20px;
+	background:url(../img/uploader.gif) -500px 0px no-repeat;
+	font-size: 24px;
+	margin-top: 30px;
+	text-shadow: 1px 1px 0px #DDD;
+}
+#ratio{
+	height:66px;
+	font-size:20px;
+}
+#ratio input[type="text"]{
+	border:0px;
+	font-size:20px;
+	width:50px;
+	outline:0px;
+}
+
+input[type="text"]#ratiox{
+	text-align:right;
+}
